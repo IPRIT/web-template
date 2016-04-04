@@ -5,10 +5,10 @@ module.exports = {
   dest: dest,
   src: src,
 
-  ejs: {
+  jade: {
     src: [
-      src + '/**/*.ejs',
-      '!' + src + '/**/_*.ejs'
+      src + '/**/*.jade',
+      '!' + src + '/**/_*.jade'
     ],
     dest: dest
   },
@@ -29,9 +29,9 @@ module.exports = {
   },
 
   js: {
-    src: src + '/js/**/*.js',
+    src: src + '/**/*.js',
     dest: dest + '/js',
-    uglify: true
+    minify: true
   },
 
   image: {
@@ -43,7 +43,7 @@ module.exports = {
   },
 
   favicon: {
-    src: src + '/favicon.ico',
+    src: src + '/image/favicon.ico',
     dest: dest
   }
-}
+};

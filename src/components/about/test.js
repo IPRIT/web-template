@@ -1,0 +1,1 @@
+console.log('about\' test.js works');

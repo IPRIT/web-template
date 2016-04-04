@@ -5,11 +5,11 @@ var config = require('./gulp-config');
 
 var gulpif = require('gulp-if');
 var plumber = require('gulp-plumber');
-var ejs = require('gulp-ejs');
+var jade = require('gulp-jade');
 var sass = require('gulp-sass');
 var cssnext = require('gulp-cssnext');
-var minify = require('gulp-cssnano');
-var uglify = require('gulp-uglify');
+var minifyCss = require('gulp-cssnano');
+var minifyJs = require('gulp-minify');
 var imagemin = require('gulp-imagemin');
 var browserSync = require('browser-sync');
 var runSequence = require('run-sequence');
@@ -19,17 +19,17 @@ gulp.task('clean', function() {
   del([config.js.dest + '/*.*']);
   del([config.sass.dest + '/*.*']);
   del([config.css.dest + '/*.*']);
-  del([config.ejs.dest + '/*.*']);
+  del([config.jade.dest + '/*.*']);
   del([config.favicon.dest]);
   del([config.dest]);
 });
 
-gulp.task('ejs', function() {
-  gulp.src(config.ejs.src)
+gulp.task('jade', function() {
+  gulp.src(config.jade.src)
     .pipe(plumber())
-    .pipe(ejs())
-    .pipe(gulp.dest(config.ejs.dest))
-    .pipe(browserSync.reload({ stream: true }));
+    .pipe(jade())
+    .pipe(gulp.dest(config.jade.dest));
+    //.pipe(browserSync.reload({ stream: true }));
 });
 
 gulp.task('sass', function() {
@@ -37,7 +37,7 @@ gulp.task('sass', function() {
     .pipe(plumber())
     .pipe(sass())
     .pipe(cssnext({ browsers: config.sass.browsers }))
-    .pipe(gulpif(config.sass.minify, minify()))
+    .pipe(gulpif(config.sass.minify, minifyCss()))
     .pipe(gulp.dest(config.sass.dest))
     .pipe(browserSync.reload({ stream: true }));
 });
@@ -45,14 +45,14 @@ gulp.task('sass', function() {
 gulp.task('css', function () {
   gulp.src(config.css.src)
     .pipe(gulp.dest(config.css.dest))
-    .pipe(gulpif(config.css.minify, minify()))
+    .pipe(gulpif(config.css.minify, minifyCss()))
     .pipe(browserSync.reload({ stream: true }));
 });
 
 gulp.task('js', function () {
   gulp.src(config.js.src)
     .pipe(plumber())
-    .pipe(gulpif(config.js.uglify, uglify({ preserveComments: 'some' })))
+    .pipe(gulpif(config.js.minify, minifyJs()))
     .pipe(gulp.dest(config.js.dest))
     .pipe(browserSync.reload({ stream: true }));
 });
@@ -74,7 +74,7 @@ gulp.task('watch', function () {
   gulp.watch(config.js.src, ['js']);
   gulp.watch(config.sass.src, ['sass']);
   gulp.watch(config.css.src, ['css']);
-  gulp.watch(config.ejs.src[0], ['ejs']);
+  gulp.watch(config.jade.src[0], ['jade']);
   gulp.watch(config.image.src, ['image']);
   gulp.watch(config.favicon.src, ['favicon']);
 });
@@ -90,7 +90,7 @@ gulp.task('browser-sync', function() {
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['image', 'js', 'sass', 'css', 'ejs', 'favicon'],
+    ['image', 'js', 'sass', 'css', 'jade', 'favicon'],
     callback
   );
 });

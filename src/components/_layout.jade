@@ -1,0 +1,10 @@
+//include mixins/mixins
+
+doctype html
+html(ng-controller='PageCtrl', manifest='/manifest.appcache')
+    head
+        base(href='/')
+        include _head
+
+    body(ng-controller='AppCtrl')
+        block content
